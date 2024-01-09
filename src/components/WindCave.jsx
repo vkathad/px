@@ -4,7 +4,6 @@ import { paymentMethodShape } from '../../../../utils/payment';
 import RadioInput from '../../../../components/common/Form/RadioInput';
 import usePerformPlaceOrder from '../hooks/usePerformPlaceOrder';
 import usePayOneCheckoutFormContext from '../hooks/usePayOneCheckoutFormContext';
-import Card from '../../../../components/common/Card';
 
 function WindCave({ method, selected, actions }) {
   const { registerPaymentAction } = usePayOneCheckoutFormContext();
@@ -40,13 +39,6 @@ function WindCave({ method, selected, actions }) {
           checked={isSelected}
           onChange={actions.change}
         />
-        <div className="mx-4 my-4">
-          <Card bg="darker">
-            <div className="container flex flex-col justify-center w-4/5">
-              <div>test</div>
-            </div>
-          </Card>
-        </div>
       </div>
     </div>
   );
