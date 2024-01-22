@@ -5,10 +5,10 @@ import { LOGIN_FORM, config } from '../../../../config';
 
 import usePayOneAppContext from './usePayOneAppContext';
 import usePayOneCartContext from './usePayOneCartContext';
-import { performRedirect, _isObjEmpty } from '../utility';
+import { _isObjEmpty } from '../utility';
 
 export default function usePerformPlaceOrder(paymentMethodCode) {
-  const { cartId, setRestPaymentMethod, setOrderInfo } = usePayOneCartContext();
+  const { cartId } = usePayOneCartContext();
   const { isLoggedIn, setPageLoader, setErrorMessage } = usePayOneAppContext();
   console.log('perfom place order new');
   return useCallback(
@@ -45,16 +45,17 @@ export default function usePerformPlaceOrder(paymentMethodCode) {
           setErrorMessage(data.message);
           return;
         }
+        window.location.replace(data.redirect_uri);
 
-        const order = await setRestPaymentMethod(paymentMethodData, isLoggedIn);
-        console.log(order);
-        console.log('order');
-        setPageLoader(false);
-        performRedirect(order, data.redirect_uri);
+        // const order = await setRestPaymentMethod(paymentMethodData, isLoggedIn);
+        // console.log(order);
+        // console.log('order', order);
+        // setPageLoader(false);
+        // performRedirect(order, data.redirect_uri);
 
-        if (order) {
-          setOrderInfo(order);
-        }
+        // if (order) {
+        //   setOrderInfo(order);
+        // }
       } catch (error) {
         console.error(error);
         setErrorMessage(
@@ -63,14 +64,6 @@ export default function usePerformPlaceOrder(paymentMethodCode) {
         setPageLoader(false);
       }
     },
-    [
-      isLoggedIn,
-      setOrderInfo,
-      setPageLoader,
-      setErrorMessage,
-      paymentMethodCode,
-      setRestPaymentMethod,
-      cartId,
-    ]
+    [isLoggedIn, setPageLoader, setErrorMessage, paymentMethodCode, cartId]
   );
 }
