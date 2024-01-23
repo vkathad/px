@@ -3,31 +3,15 @@ import _get from 'lodash.get';
 import RootElement from '../../../../utils/rootElement';
 
 const config = RootElement.getPaymentConfig();
-console.log(config);
+
 console.log('unii');
-const payOne = _get(config, 'payone');
-const canShowPaymentHintText = !!_get(payOne, 'canShowPaymentHintText');
-const canShowAgreementMsg = !!_get(payOne, 'canShowAgreementMessage');
-const consumerScoreEnabledMethods = _get(
-  payOne,
-  'consumerScoreEnabledMethods',
-  []
-);
+const payOne = _get(config, 'windcave');
+console.log(payOne);
+console.log('payone');
 
-export function getPayOneBaseConfig(paymentMethodCode) {
-  const canShowAgreementMessage =
-    canShowAgreementMsg &&
-    !consumerScoreEnabledMethods.includes(paymentMethodCode);
-  const isAgreementVisible = canShowPaymentHintText || canShowAgreementMessage;
-
+export function getPayOneBaseConfig() {
   const baseConfig = {
-    instructions: _get(config, `instructions.${paymentMethodCode}`, ''),
-    paymentHintText: _get(payOne, 'paymentHintText'),
-    agreementMessage: _get(payOne, 'agreementMessage', ''),
-    isAgreementVisible,
-    canShowPaymentText: isAgreementVisible && canShowPaymentHintText,
-    canShowBoniAgreement: isAgreementVisible && canShowAgreementMessage,
+    ...payOne,
   };
-
   return baseConfig;
 }

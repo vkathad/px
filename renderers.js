@@ -1,5 +1,5 @@
 import WindCave from './src/components/WindCave';
 
 export default {
-  zippayment: WindCave,
+  windcave_pxpay2_iframe: WindCave,
 };

@@ -1,16 +1,15 @@
 import { useCallback } from 'react';
 import _get from 'lodash.get';
 import _set from 'lodash.set';
-import { LOGIN_FORM, config } from '../../../../config';
+import { LOGIN_FORM } from '../../../../config';
 
 import usePayOneAppContext from './usePayOneAppContext';
 import usePayOneCartContext from './usePayOneCartContext';
 import { _isObjEmpty } from '../utility';
 
 export default function usePerformPlaceOrder(paymentMethodCode) {
-  const { cartId } = usePayOneCartContext();
+  const { cartId, setRestPaymentMethod, setOrderInfo } = usePayOneCartContext();
   const { isLoggedIn, setPageLoader, setErrorMessage } = usePayOneAppContext();
-  console.log('perfom place order new');
   return useCallback(
     async (values, additionalData, extensionAttributes = {}) => {
       try {
@@ -35,27 +34,15 @@ export default function usePerformPlaceOrder(paymentMethodCode) {
         }
 
         setPageLoader(true);
-        const response = await fetch(`${config.baseUrl}/zippayment/standard`);
-        if (!response.ok) {
-          throw new Error('Network response was not ok.');
-        }
-        const data = await response.json();
-        if (data && data.error) {
-          console.log(data);
-          setErrorMessage(data.message);
-          return;
-        }
-        window.location.replace(data.redirect_uri);
-
-        // const order = await setRestPaymentMethod(paymentMethodData, isLoggedIn);
+        const order = await setRestPaymentMethod(paymentMethodData, isLoggedIn);
         // console.log(order);
-        // console.log('order', order);
+        console.log('orderdata', order);
         // setPageLoader(false);
         // performRedirect(order, data.redirect_uri);
 
-        // if (order) {
-        //   setOrderInfo(order);
-        // }
+        if (order) {
+          setOrderInfo(order);
+        }
       } catch (error) {
         console.error(error);
         setErrorMessage(
@@ -64,6 +51,14 @@ export default function usePerformPlaceOrder(paymentMethodCode) {
         setPageLoader(false);
       }
     },
-    [isLoggedIn, setPageLoader, setErrorMessage, paymentMethodCode, cartId]
+    [
+      isLoggedIn,
+      setPageLoader,
+      setErrorMessage,
+      paymentMethodCode,
+      cartId,
+      setOrderInfo,
+      setRestPaymentMethod,
+    ]
   );
 }
